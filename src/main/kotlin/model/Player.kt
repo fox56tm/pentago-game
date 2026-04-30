@@ -2,7 +2,7 @@ package model
 
 
 data class Player(
-    val id: String,
+    val id: Int,
     val name: String,
-    val reting: Int = 1000
+    val rating: Int = 1000
 )
