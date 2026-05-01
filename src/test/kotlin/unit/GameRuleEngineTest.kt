@@ -22,7 +22,7 @@ class GameRuleEngineTest {
     @Test
     fun `correct move`() {
         val game = createActiveGame()
-        val move = Move(testName1, x = 0, y = 0, quadrant = 0, rotation = "R", color = "W")
+        val move = Move(testName1, 0, 0, 0, "R", "W")
         assertTrue(ruleEngine.validateMove(game, move))
     }
 
@@ -46,10 +46,10 @@ class GameRuleEngineTest {
         game.board[1][0] = 4; game.board[1][1] = 5; game.board[1][2] = 6
         game.board[2][0] = 7; game.board[2][1] = 8; game.board[2][2] = 9
 
-        ruleEngine.applyRotation(game, quadrant = 0, direction = "R")
+        ruleEngine.applyRotation(game, 0, "R")
         assertEquals(7, game.board[0][0])
         assertEquals(1, game.board[0][2])
-        ruleEngine.applyRotation(game, quadrant = 0, direction = "L")
+        ruleEngine.applyRotation(game, 0, "L")
         assertEquals(1, game.board[0][0])
         assertEquals(3, game.board[0][2])
     }
