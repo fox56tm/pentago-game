@@ -1,13 +1,16 @@
 package model
 
-data class Game (
+data class Game(
     val id: String,
     val players: List<Player>,
     val moves: MutableList<Move> = mutableListOf(),
     var status: String = "NEW",
     val board: MutableList<MutableList<Int>> = MutableList(6) { MutableList(6) { 0 } }
-){
-    fun getCell(x: Int, y: Int): Int {
+) {
+    fun getCell(
+        x: Int,
+        y: Int
+    ): Int {
         if (x !in 0..5 || y !in 0..5) return -1
         return board[y][x]
     }

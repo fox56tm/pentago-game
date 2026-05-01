@@ -1,6 +1,6 @@
 plugins {
-    kotlin("jvm") version "2.3.10"
-    id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
+    kotlin("jvm") version "1.9.24"
+    id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
 }
 
 group = "game.project"
@@ -11,13 +11,17 @@ repositories {
 }
 
 dependencies {
-    testImplementation(kotlin("test"))
-}
+    implementation(kotlin("stdlib"))
 
-kotlin {
-    jvmToolchain(17)
+    testImplementation(platform("org.junit:junit-bom:5.10.2"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 tasks.test {
     useJUnitPlatform()
+}
+
+kotlin {
+    jvmToolchain(17)
 }

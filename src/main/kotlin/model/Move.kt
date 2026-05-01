@@ -6,5 +6,5 @@ data class Move(
     val y: Int,
     val quadrant: Int,
     val rotation: String, // "L" , "R"
-    val color: String
+    val color: String // "W", "B" (White, Black)
 )

@@ -11,5 +11,4 @@ class InMemoryGameRepository : GameRepository {
     override fun findById(id: String): Game? {
         return storage[id]
     }
-
 }
