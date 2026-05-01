@@ -7,12 +7,11 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class GameTest {
-
-    private val testName1 = Player(1, "test1")
-    private val testName2 = Player(2, "test2")
+    private val testPlayer1 = Player(1, "test1")
+    private val testPlayer2 = Player(2, "test2")
 
     private fun createGame(): Game {
-        return Game(id = "test-game", players = listOf(testName1, testName2), status = "ACTIVE")
+        return Game(id = "test-game", players = listOf(testPlayer1, testPlayer2), status = "ACTIVE")
     }
 
     @Test
@@ -33,7 +32,7 @@ class GameTest {
     fun `change color correctly in getCurrentColor`() {
         val game = createGame()
         assertEquals("W", game.getCurrentColor())
-        game.placeMove(Move(testName1, 0, 0, 0, "R", "W"))
+        game.placeMove(Move(testPlayer1, 0, 0, 0, "R", "W"))
         assertEquals("B", game.getCurrentColor())
     }
 }

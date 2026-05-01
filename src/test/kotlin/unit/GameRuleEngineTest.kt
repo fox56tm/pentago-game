@@ -10,19 +10,18 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class GameRuleEngineTest {
-
     private val ruleEngine = GameRuleEngine()
-    private val testName1 = Player(1, "test1")
-    private val testName2 = Player(2, "test2")
+    private val testPlayer1 = Player(1, "test1")
+    private val testPlayer2 = Player(2, "test2")
 
     private fun createActiveGame(): Game {
-        return Game(id = "test-game", players = listOf(testName1, testName2), status = "ACTIVE")
+        return Game(id = "test-game", players = listOf(testPlayer1, testPlayer2), status = "ACTIVE")
     }
 
     @Test
     fun `correct move`() {
         val game = createActiveGame()
-        val move = Move(testName1, 0, 0, 0, "R", "W")
+        val move = Move(testPlayer1, 0, 0, 0, "R", "W")
         assertTrue(ruleEngine.validateMove(game, move))
     }
 
@@ -31,12 +30,12 @@ class GameRuleEngineTest {
         val game = createActiveGame()
         game.board[0][0] = 1
         game.status = "FINISHED"
-        assertFalse(ruleEngine.validateMove(game, Move(testName1, 1, 0, 0, "R", "W")))
+        assertFalse(ruleEngine.validateMove(game, Move(testPlayer1, 1, 0, 0, "R", "W")))
         game.status = "ACTIVE"
-        assertFalse(ruleEngine.validateMove(game, Move(testName1, 0, 0, 0, "R", "W")))
-        assertFalse(ruleEngine.validateMove(game, Move(testName1, 9, 9, 0, "R", "W")))
-        assertFalse(ruleEngine.validateMove(game, Move(testName1, 1, 0, 5, "R", "W")))
-        assertFalse(ruleEngine.validateMove(game, Move(testName1, 1, 0, 0, "X", "W")))
+        assertFalse(ruleEngine.validateMove(game, Move(testPlayer1, 0, 0, 0, "R", "W")))
+        assertFalse(ruleEngine.validateMove(game, Move(testPlayer1, 9, 9, 0, "R", "W")))
+        assertFalse(ruleEngine.validateMove(game, Move(testPlayer1, 1, 0, 5, "R", "W")))
+        assertFalse(ruleEngine.validateMove(game, Move(testPlayer1, 1, 0, 0, "X", "W")))
     }
 
     @Test
