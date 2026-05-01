@@ -14,13 +14,17 @@ class GameService (
     }
     fun makeMove(gameId: String, move: Move): Boolean{
         val game = repository.findById(gameId) ?: throw IllegalArgumentException("Game with id $gameId not found\n")
-        if (ruleEngine.validateMove(game, move)) {
-            game.placeMove(move)
-            repository.save(game)
-            return true
-        } else {
-            return false
+        if (!ruleEngine.validateMove(game, move)) return false
+        game.placeMove(move)
+        ruleEngine.applyRotation(game, move.quadrant, move.rotation)
+        val winner = ruleEngine.checkWinner(game)
+        if (winner != null){
+            game.status = if (winner == "DRAW") "DRAW" else "FINISHED"
         }
+        repository.save(game)
+        return true
     }
-
+    fun getGame(gameId: String): Game? {
+        return repository.findById(gameId)
+    }
 }

@@ -1,9 +1,7 @@
 import model.Move
 import model.Player
 import repository.InMemoryGameRepository
-import service.GameRuleEngine
-import service.GameService
-
+import service.*
 fun main() {
     println("hello")
 
