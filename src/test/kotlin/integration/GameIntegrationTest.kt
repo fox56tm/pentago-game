@@ -1,9 +1,9 @@
 package integration
 
+import main.service.DefaultRules
 import model.Move
 import model.Player
 import repository.InMemoryGameRepository
-import service.GameRuleEngine
 import service.GameService
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -14,7 +14,7 @@ class GameIntegrationTest {
     private val testPlayer2 = Player(2, "test2")
 
     private fun createService(): GameService {
-        return GameService(InMemoryGameRepository(), GameRuleEngine())
+        return GameService(InMemoryGameRepository(), DefaultRules())
     }
 
     @Test

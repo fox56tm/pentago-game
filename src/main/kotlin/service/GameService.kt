@@ -1,5 +1,6 @@
 package service
 
+import main.service.DefaultRules
 import model.Game
 import model.Move
 import model.Player
@@ -7,7 +8,7 @@ import repository.GameRepository
 
 class GameService(
     private val repository: GameRepository,
-    private val ruleEngine: GameRuleEngine
+    private val ruleEngine: DefaultRules
 ) {
     fun createGame(
         gameId: String,

@@ -1,16 +1,16 @@
 package unit
 
+import main.service.DefaultRules
 import model.Game
 import model.Move
 import model.Player
-import service.GameRuleEngine
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class GameRuleEngineTest {
-    private val ruleEngine = GameRuleEngine()
+    private val ruleEngine = DefaultRules()
     private val testPlayer1 = Player(1, "test1")
     private val testPlayer2 = Player(2, "test2")
 
