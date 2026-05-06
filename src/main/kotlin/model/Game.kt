@@ -20,7 +20,7 @@ data class Game(
         moves.add(move)
     }
 
-    fun getCurrentColor(): String {
-        return if (moves.size % 2 == 0) "W" else "B"
+    fun getCurrentColor(color: String): String {
+        return color
     }
 }

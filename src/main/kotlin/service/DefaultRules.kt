@@ -33,6 +33,7 @@ class DefaultRules: GameRuleEngine {
             println("Rotation only 'L' or 'R', not: '${move.rotation}'")
             return false
         }
+        if(game.getCurrentColor())
         return true
     }
 
@@ -74,62 +75,33 @@ class DefaultRules: GameRuleEngine {
 
     override fun checkWinner(game: Game): String? {
         val b = game.board
+        val lines = mutableListOf<List<Pair<Int,Int>>>()
+
+        for (r in 0..5){
+            for (c in 0..1)
+                lines.add((0..4).map{ r to c + it})
+        }
+        for (c in 0..5){
+            for (r in 0..1)
+                lines.add((0..4).map{ r + it to c})
+        }
+        for (r in 0..1){
+            for (c in 0..1)
+                lines.add((0..4).map{ r+it to c + it})
+        }
+        for (r in 0..1){
+            for (c in 0..1)
+                lines.add((0..4).map{ r + it to c + 4 - it})
+        }
         var whiteWins = false
         var blackWins = false
-        for (r in 0..5) {
-            for (startC in 0..1) {
-                if (b[r][startC] != 0 &&
-                    b[r][startC] == b[r][startC + 1] &&
-                    b[r][startC] == b[r][startC + 2] &&
-                    b[r][startC] == b[r][startC + 3] &&
-                    b[r][startC] == b[r][startC + 4]
-                ) {
-                    if (b[r][startC] == 1) whiteWins = true
-                    if (b[r][startC] == 2) blackWins = true
-                }
-            }
+        for (l in lines){
+            val values = l.map{(r,c) -> b[r][c]}
+            if (values.all { it == 1 }) whiteWins = true
+            if (values.all { it == 2 }) blackWins = true
         }
-        for (c in 0..5) {
-            for (startR in 0..1) {
-                if (b[startR][c] != 0 &&
-                    b[startR][c] == b[startR + 1][c] &&
-                    b[startR][c] == b[startR + 2][c] &&
-                    b[startR][c] == b[startR + 3][c] &&
-                    b[startR][c] == b[startR + 4][c]
-                ) {
-                    if (b[startR][c] == 1) whiteWins = true
-                    if (b[startR][c] == 2) blackWins = true
-                }
-            }
-        }
-        for (startR in 0..1) {
-            for (startC in 0..1) {
-                if (b[startR][startC] != 0 &&
-                    b[startR][startC] == b[startR + 1][startC + 1] &&
-                    b[startR][startC] == b[startR + 2][startC + 2] &&
-                    b[startR][startC] == b[startR + 3][startC + 3] &&
-                    b[startR][startC] == b[startR + 4][startC + 4]
-                ) {
-                    if (b[startR][startC] == 1) whiteWins = true
-                    if (b[startR][startC] == 2) blackWins = true
-                }
-                val sc = startC + 4
-                if (b[startR][sc] == b[startR + 1][sc - 1] &&
-                    b[startR][sc] == b[startR + 2][sc - 2] &&
-                    b[startR][sc] == b[startR + 3][sc - 3] &&
-                    b[startR][sc] == b[startR + 4][sc - 4]
-                ) {
-                    if (b[startR][sc] == 1) whiteWins = true
-                    if (b[startR][sc] == 2) blackWins = true
-                }
-            }
-        }
-        var isFull = true
-        for (r in 0..5) {
-            for (c in 0..5) {
-                if (b[r][c] == 0) isFull = false
-            }
-        }
+        val isFull = b.all{ row -> row.all { it != 0 } }
+
         if (whiteWins && blackWins) return "DRAW"
         if (whiteWins) return "W"
         if (blackWins) return "B"

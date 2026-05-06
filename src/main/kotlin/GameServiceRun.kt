@@ -27,12 +27,9 @@ class GameServiceRun {
         val game = service.getGame("game-1")!!
 
         while (game.status == "ACTIVE") {
-            val currentPlayer = if (game.getCurrentColor() == "W") p1 else p2
-            println("Now do action color: ${game.getCurrentColor()}")
-
             val input = scanner.nextLine().trim().split(" ")
 
-            if (input.size != 4) {
+            if (input.size != 5) {
                 println("Uncorrect format! Action format: x y quadrant rotation")
                 continue
             }
@@ -41,6 +38,10 @@ class GameServiceRun {
             val y = input[1].toIntOrNull()
             val quadrant = input[2].toIntOrNull()
             val rotation = input[3].uppercase()
+            val currColor = input[4].uppercase()
+
+            val currentPlayer = if (currColor == "W") p1 else p2
+            println("Now do action color: $currColor")
 
             if (x == null || y == null || quadrant == null) {
                 println("Uncorrect format! x, y, quadrant must be a numbers")
@@ -54,7 +55,7 @@ class GameServiceRun {
                     y = y,
                     quadrant = quadrant,
                     rotation = rotation,
-                    color = game.getCurrentColor()
+                    color = currColor
                 )
             val success = service.makeMove("game-1", move)
             if (success) println("Correct action")
