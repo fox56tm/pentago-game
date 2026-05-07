@@ -1,6 +1,5 @@
 package service
 
-import main.service.DefaultRules
 import model.Game
 import model.Move
 import model.Player

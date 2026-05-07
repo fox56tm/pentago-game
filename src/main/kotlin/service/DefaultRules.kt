@@ -1,10 +1,9 @@
-package main.service
+package service
 
 import model.Game
 import model.Move
-import service.GameRuleEngine
 
-class DefaultRules: GameRuleEngine {
+class DefaultRules : GameRuleEngine {
     override fun validateMove(
         game: Game,
         move: Move
@@ -33,7 +32,6 @@ class DefaultRules: GameRuleEngine {
             println("Rotation only 'L' or 'R', not: '${move.rotation}'")
             return false
         }
-        if(game.getCurrentColor())
         return true
     }
 
@@ -71,36 +69,37 @@ class DefaultRules: GameRuleEngine {
                 game.board[rowOff + r][colOff + c] = rotated[r][c]
             }
         }
+        game.nextMoveColor()
     }
 
     override fun checkWinner(game: Game): String? {
         val b = game.board
-        val lines = mutableListOf<List<Pair<Int,Int>>>()
+        val lines = mutableListOf<List<Pair<Int, Int>>>()
 
-        for (r in 0..5){
+        for (r in 0..5) {
             for (c in 0..1)
-                lines.add((0..4).map{ r to c + it})
+                lines.add((0..4).map { r to c + it })
         }
-        for (c in 0..5){
+        for (c in 0..5) {
             for (r in 0..1)
-                lines.add((0..4).map{ r + it to c})
+                lines.add((0..4).map { r + it to c })
         }
-        for (r in 0..1){
+        for (r in 0..1) {
             for (c in 0..1)
-                lines.add((0..4).map{ r+it to c + it})
+                lines.add((0..4).map { r + it to c + it })
         }
-        for (r in 0..1){
+        for (r in 0..1) {
             for (c in 0..1)
-                lines.add((0..4).map{ r + it to c + 4 - it})
+                lines.add((0..4).map { r + it to c + 4 - it })
         }
         var whiteWins = false
         var blackWins = false
-        for (l in lines){
-            val values = l.map{(r,c) -> b[r][c]}
+        for (l in lines) {
+            val values = l.map { (r, c) -> b[r][c] }
             if (values.all { it == 1 }) whiteWins = true
             if (values.all { it == 2 }) blackWins = true
         }
-        val isFull = b.all{ row -> row.all { it != 0 } }
+        val isFull = b.all { row -> row.all { it != 0 } }
 
         if (whiteWins && blackWins) return "DRAW"
         if (whiteWins) return "W"

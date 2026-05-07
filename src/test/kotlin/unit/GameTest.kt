@@ -29,10 +29,11 @@ class GameTest {
     }
 
     @Test
-    fun `change color correctly in getCurrentColor`() {
+    fun `change and give color correctly`() {
         val game = createGame()
-        assertEquals("W", game.getCurrentColor())
+        assertEquals("W", game.giveCurrentColor())
         game.placeMove(Move(testPlayer1, 0, 0, 0, "R", "W"))
-        assertEquals("B", game.getCurrentColor())
+        game.nextMoveColor()
+        assertEquals("B", game.giveCurrentColor())
     }
 }

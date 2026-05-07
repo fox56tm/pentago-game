@@ -1,10 +1,9 @@
 package unit
 
-import main.service.DefaultRules
 import model.Move
 import model.Player
 import repository.InMemoryGameRepository
-import service.GameRuleEngine
+import service.DefaultRules
 import service.GameService
 import kotlin.test.Test
 import kotlin.test.assertEquals

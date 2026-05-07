@@ -1,9 +1,9 @@
 package unit
 
-import main.service.DefaultRules
 import model.Game
 import model.Move
 import model.Player
+import service.DefaultRules
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
