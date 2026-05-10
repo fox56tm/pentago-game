@@ -6,7 +6,8 @@ data class Game(
     val moves: MutableList<Move> = mutableListOf(),
     var status: String = "NEW",
     val board: MutableList<MutableList<Int>> = MutableList(6) { MutableList(6) { 0 } },
-    var currTurnColor: String = "W"
+    var currTurnColor: String = "W",
+    var winnerColor: String? = null
 ) {
     fun getCell(
         x: Int,
@@ -21,9 +22,7 @@ data class Game(
         moves.add(move)
     }
 
-    fun giveCurrentColor(): String {
-        return currTurnColor
-    }
+    fun giveCurrentColor(): String = currTurnColor
 
     fun nextMoveColor() {
         currTurnColor = if (currTurnColor == "W") "B" else "W"

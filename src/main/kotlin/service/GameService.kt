@@ -30,6 +30,7 @@ class GameService(
         val winner = ruleEngine.checkWinner(game)
         if (winner != null) {
             game.status = if (winner == "DRAW") "DRAW" else "FINISHED"
+            game.winnerColor = if (winner == "DRAW") null else winner
         }
         repository.save(game)
         return true
