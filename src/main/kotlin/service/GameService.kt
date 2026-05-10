@@ -5,7 +5,8 @@ import model.Move
 import model.Player
 import repository.GameRepository
 
-class GameService(
+class
+GameService(
     private val repository: GameRepository,
     private val ruleEngine: DefaultRules
 ) {
