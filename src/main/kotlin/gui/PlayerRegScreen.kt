@@ -140,16 +140,13 @@ fun AddPlayerSection(
                 singleLine = true,
                 modifier = Modifier.weight(1f).padding(start = 8.dp)
             )
-            Button(onClick = {
+            Button(
+                onClick = {
                 val trimmedName = newName.trim()
                 when{
                     trimmedName.isBlank() -> error = "Enter a name"
                     players.any{trimmedName == it.name} -> error = "Name is already exists"
-                    else -> {
-                        onAddPlayer(trimmedName)
-                        newName = ""
-                        error = ""
-                    }
+                    else -> { onAddPlayer(trimmedName);newName = ""; error = ""}
                 }
             }) {Text("Add")}
         }

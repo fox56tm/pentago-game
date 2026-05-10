@@ -2,6 +2,7 @@ package gui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -9,18 +10,70 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.delay
 import model.Game
 import model.Move
 import model.Player
 import repository.PlayerRepo
 import service.GameService
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
-fun GameScreen(){
+fun GameScreen(
+    service: GameService,
+    gameId: String,
+    player1: Player,
+    player2: Player,
+    color1: String,
+    playerRepo: PlayerRepo,
+    onBack: () -> Unit
+){
+    val game = service.getGame(gameId) ?: return
+    val color2 = if(color1 == "W") "B" else "W"
+    var refresh by remember { mutableStateOf(0) }
+    var seconds by remember { mutableStateOf(0) }
+    var statsUpdated by remember { mutableStateOf(false) }
+    val board = if (refresh >= 0) game.board else game.board
+    val isActive = game.status == "ACTIVE"
+
+    LaunchedEffect(isActive){
+        while(isActive){ delay(1000L.milliseconds); seconds++ }
+
+    }
+    LaunchedEffect(game.status){
+        if(!statsUpdated && !isActive){
+            statsUpdated = true
+            updateStats(game, player1, player2, color1, playerRepo)
+        }
+    }
+    Row(modifier = Modifier.fillMaxSize().padding(20.dp)) {
+        Board(board)
+        GameSidePanel(
+            game = game,
+            player1 = player1,
+            player2 = player2,
+            color1 = color1,
+            color2 = color2,
+            seconds = seconds,
+            isActive = isActive,
+            onMove = { x, y, q, r ->
+                val player = if (game.currTurnColor == color1) player1 else player2
+                val success = service.makeMove(gameId, Move(player, x, y, q, r, game.currTurnColor))
+                if (success) refresh++
+                success
+            },
+            onBack = onBack
+        )
+    }
 
 }
 
@@ -32,7 +85,7 @@ fun GameSidePanel(
     color1: String,
     color2: String,
     seconds: Int,
-    isAlive: Boolean,
+    isActive: Boolean,
     onMove: (Int, Int, Int, String) -> Boolean,
     onBack: () -> Unit
 ){
@@ -85,4 +138,10 @@ fun updateStats(game: Game, player1: Player, player2: Player, color1: String, re
     }
     repo.update(p1)
     repo.update(p2)
+}
+
+@Composable
+fun Board(board: MutableList<MutableList<Int>>){
+
+
 }
