@@ -8,12 +8,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -124,6 +126,51 @@ fun AddPlayerSection(
             }) {Text("Add")}
         }
         if (error.isNotEmpty()) Text(error, color = Color.Red, fontSize = 12.sp)
+    }
+}
+@Composable
+fun GameSetupSection(
+    selected: List<Player>,
+    onStartGame: (Player, Player, String, String) -> Unit
+) {
+    var color1 by remember { mutableStateOf("W") }
+    var firstColor by remember { mutableStateOf("W") }
+
+    if (selected.size == 2) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column {
+                Text("${selected[0].name} plays:", fontSize = 13.sp)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    RadioButton(selected = color1 == "W", onClick = { color1 = "W" })
+                    Text("White", Modifier.padding(end = 12.dp))
+                    RadioButton(selected = color1 == "B", onClick = { color1 = "B" })
+                    Text("Black")
+                }
+            }
+            Column {
+                Text("First move:", fontSize = 13.sp)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    RadioButton(selected = firstColor == "W", onClick = { firstColor = "W" })
+                    Text("White", Modifier.padding(end = 12.dp))
+                    RadioButton(selected = firstColor == "B", onClick = { firstColor = "B" })
+                    Text("Black")
+                }
+            }
+            Button(
+                onClick = { onStartGame(selected[0], selected[1], color1, firstColor) },
+                modifier = Modifier.width(140.dp)
+            ) { Text("Start game") }
+        }
+    } else {
+        Text(
+            text = if (selected.isEmpty()) "Select 2 players for play" else "Select one more player",
+            color = Color.Gray,
+            fontSize = 13.sp
+        )
     }
 }
 
