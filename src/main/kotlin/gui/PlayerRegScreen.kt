@@ -2,6 +2,7 @@ package gui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,8 +10,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Button
 import androidx.compose.material.Divider
+import androidx.compose.material.Icon
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -54,7 +61,7 @@ fun PlayerList(
     onPlayerClick: (Player) -> Unit,
     modifier: Modifier = Modifier
     ){
-        LazyColumn(modifier= modifier) {
+        LazyColumn(modifier = modifier) {
             items(players){ player ->
                 val isSelected = selected.any{it.id == player.id}
                 Row(modifier = modifier.fillMaxWidth()
@@ -83,7 +90,41 @@ fun AddPlayerSection(
     var error by remember { mutableStateOf("") }
 
     Row(modifier = Modifier.fillMaxWidth()
-        .clickable{}
+        .clickable{showAdd = !showAdd}.padding(vertical = 6.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ){
+        Text("Add Player", fontSize = 16.sp)
+        Icon(
+            imageVector = if (showAdd) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+            contentDescription = if (showAdd) "Свернуть" else "Развернуть"
+        )
+    }
+    if(showAdd){
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(bottom = 8.dp)
+        ){
+            OutlinedTextField(value = newName,
+                onValueChange = { newName = it },
+                label = { Text("Name") },
+                singleLine = true,
+                modifier = Modifier.weight(1f).padding(start = 8.dp)
+            )
+            Button(onClick = {
+                val trimmedName = newName.trim()
+                when{
+                    trimmedName.isBlank() -> error = "Enter a name"
+                    players.any{trimmedName == it.name} -> error = "Name is already exists"
+                    else -> {
+                        onAddPlayer(trimmedName)
+                        newName = ""
+                        error = ""
+                    }
+                }
+            }) {Text("Add")}
+        }
+        if (error.isNotEmpty()) Text(error, color = Color.Red, fontSize = 12.sp)
+    }
 }
 
 
