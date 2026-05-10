@@ -34,14 +34,42 @@ import model.Player
 import repository.PlayerRepo
 
 @Composable
-fun PlayerRegScreen (playerRepo: PlayerRepo, onStartGame: (Player, Player, String, String) -> Unit) {
-
+fun PlayerRegistryScreen(
+    playerRepo: PlayerRepo,
+    onStartGame: (Player, Player, String, String) -> Unit
+) {
     var players by remember { mutableStateOf(playerRepo.findAll()) }
     var selected by remember { mutableStateOf<List<Player>>(emptyList()) }
-
     Column(modifier = Modifier.fillMaxSize().padding(20.dp)) {
+        RegistryHeader()
+
+        PlayerList(
+            players = players,
+            selected = selected,
+            onPlayerClick = { player ->
+                val isSelected = selected.any { it.id == player.id }
+                selected = if (isSelected) selected.filter { it.id != player.id }
+                else if (selected.size < 2) selected + player
+                else selected
+            },
+            modifier = Modifier.weight(1f)
+        )
+        Divider(modifier = Modifier.padding(vertical = 8.dp))
+        AddPlayerSection(
+            players = players,
+            onAddPlayer = { newName ->
+                playerRepo.save(Player(playerRepo.nextId(), newName))
+                players = playerRepo.findAll()
             }
+        )
+        Divider(modifier = Modifier.padding(vertical = 8.dp))
+        GameSetupSection(
+            selected = selected,
+            onStartGame = onStartGame
+        )
+    }
 }
+
 @Composable
 fun RegistryHeader(){
 
@@ -56,6 +84,7 @@ fun RegistryHeader(){
     }
     Divider()
 }
+
 @Composable
 fun PlayerList(
     players: List<Player>,
@@ -66,16 +95,16 @@ fun PlayerList(
         LazyColumn(modifier = modifier) {
             items(players){ player ->
                 val isSelected = selected.any{it.id == player.id}
-                Row(modifier = modifier.fillMaxWidth()
+                Row(modifier = Modifier.fillMaxWidth()
                     .clickable{onPlayerClick(player)}
                     .background(if (isSelected) Color.Blue else Color.Transparent)
                     .padding(vertical = 6.dp),
                     verticalAlignment = Alignment.CenterVertically){
                     Text(player.name, Modifier.weight(2f))
-                    Text("${player.gamesPlayed}", Modifier.weight(1f), color = Color.Green)
-                    Text("${player.wins}", Modifier.weight(1f), color = Color.Red)
-                    Text("${player.losses}", Modifier.weight(1f), color = Color.Gray)
-                    Text("${player.rating}", Modifier.weight(1f))
+                    Text("${player.gamesPlayed}", Modifier.weight(1f))
+                    Text("${player.wins}", Modifier.weight(1f), color = Color.Green)
+                    Text("${player.losses}", Modifier.weight(1f), color = Color.Red)
+                    Text("${player.rating}", Modifier.weight(1f),color = Color.Gray)
                 }
                 Divider(color = Color.Gray)
             }
@@ -90,7 +119,6 @@ fun AddPlayerSection(
     var showAdd by remember { mutableStateOf(false) }
     var newName by remember { mutableStateOf("") }
     var error by remember { mutableStateOf("") }
-
     Row(modifier = Modifier.fillMaxWidth()
         .clickable{showAdd = !showAdd}.padding(vertical = 6.dp),
         horizontalArrangement = Arrangement.SpaceBetween
@@ -128,6 +156,7 @@ fun AddPlayerSection(
         if (error.isNotEmpty()) Text(error, color = Color.Red, fontSize = 12.sp)
     }
 }
+
 @Composable
 fun GameSetupSection(
     selected: List<Player>,
@@ -135,7 +164,6 @@ fun GameSetupSection(
 ) {
     var color1 by remember { mutableStateOf("W") }
     var firstColor by remember { mutableStateOf("W") }
-
     if (selected.size == 2) {
         Row(
             modifier = Modifier.fillMaxWidth(),
