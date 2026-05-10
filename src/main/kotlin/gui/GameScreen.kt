@@ -73,7 +73,7 @@ fun GameScreen(
             },
             onBack = onBack
         )
-    }
+    }//закончить эту функцию
 
 }
 
@@ -92,7 +92,26 @@ fun GameSidePanel(
     Column(modifier = Modifier.padding(24.dp).width(240.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)) {
         GameInfoSection(player1, player2, color1,color2,seconds, game.moves.size)
-    }
+    }// закончить эту функцию
+}
+
+@Composable
+fun MoveInput(
+    currPlayerName: String,
+    currColor: String,
+    onMove: (Int, Int, Int, String) -> Boolean,
+
+
+){
+
+
+
+}
+
+@Composable
+fun Board(board: MutableList<MutableList<Int>>){
+
+
 }
 
 @Composable
@@ -140,8 +159,3 @@ fun updateStats(game: Game, player1: Player, player2: Player, color1: String, re
     repo.update(p2)
 }
 
-@Composable
-fun Board(board: MutableList<MutableList<Int>>){
-
-
-}
