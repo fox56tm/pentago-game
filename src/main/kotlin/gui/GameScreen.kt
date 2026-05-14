@@ -264,3 +264,30 @@ fun Board(board: MutableList<MutableList<Int>>) {
     }
 }
 
+@Composable
+fun MoveHistory(moves: List<Move>) {
+    var show by remember { mutableStateOf(false) }
+    Row(
+        modifier = Modifier.fillMaxWidth().clickable { show = !show },
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text("History (${moves.size})", fontSize = 13.sp)
+        Icon(
+            imageVector = if (show) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+            contentDescription = if (show) "Close" else "Open"
+        )
+    }
+    if (show) {
+        LazyColumn(modifier = Modifier.height(120.dp)) {
+            items(moves.reversed()) { move ->
+                val num = moves.size - moves.reversed().indexOf(move)
+                Text(
+                    "#$num ${move.color}: (${move.x},${move.y}) Q${move.quadrant}${move.rotation}",
+                    fontSize = 11.sp,
+                    modifier = Modifier.padding(vertical = 2.dp)
+                )
+            }
+        }
+    }
+}
+
