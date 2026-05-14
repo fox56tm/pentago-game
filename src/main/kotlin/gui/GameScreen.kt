@@ -290,4 +290,3 @@ fun MoveHistory(moves: List<Move>) {
         }
     }
 }
-
