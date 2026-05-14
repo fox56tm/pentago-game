@@ -42,15 +42,18 @@ fun PlayerRegistryScreen(
     var selected by remember { mutableStateOf<List<Player>>(emptyList()) }
     Column(modifier = Modifier.fillMaxSize().padding(20.dp)) {
         RegistryHeader()
-
         PlayerList(
             players = players,
             selected = selected,
             onPlayerClick = { player ->
                 val isSelected = selected.any { it.id == player.id }
-                selected = if (isSelected) selected.filter { it.id != player.id }
-                else if (selected.size < 2) selected + player
-                else selected
+                selected = if (isSelected) {
+                    selected.filter { it.id != player.id }
+                } else if (selected.size < 2) {
+                    selected + player
+                } else {
+                    selected
+                }
             },
             modifier = Modifier.weight(1f)
         )
@@ -71,10 +74,9 @@ fun PlayerRegistryScreen(
 }
 
 @Composable
-fun RegistryHeader(){
-
+fun RegistryHeader() {
     Text("Player Registration", fontSize = 22.sp, modifier = Modifier.padding(bottom = 4.dp))
-    Row (modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp)) {
+    Row(modifier = Modifier.fillMaxWidth().padding(bottom = 13.dp)) {
         Text("Name", Modifier.weight(2f), color = Color.Gray, fontSize = 13.sp)
         Text("Games", Modifier.weight(1f), color = Color.Gray, fontSize = 13.sp)
         Text("W", Modifier.weight(1f), color = Color.Gray, fontSize = 13.sp)
@@ -91,50 +93,55 @@ fun PlayerList(
     selected: List<Player>,
     onPlayerClick: (Player) -> Unit,
     modifier: Modifier = Modifier
-    ){
-        LazyColumn(modifier = modifier) {
-            items(players){ player ->
-                val isSelected = selected.any{it.id == player.id}
-                Row(modifier = Modifier.fillMaxWidth()
-                    .clickable{onPlayerClick(player)}
+) {
+    LazyColumn(modifier = modifier) {
+        items(players) { player ->
+            val isSelected = selected.any { it.id == player.id }
+            Row(
+                modifier = Modifier.fillMaxWidth()
+                    .clickable { onPlayerClick(player) }
                     .background(if (isSelected) Color.Blue else Color.Transparent)
-                    .padding(vertical = 6.dp),
-                    verticalAlignment = Alignment.CenterVertically){
-                    Text(player.name, Modifier.weight(2f))
-                    Text("${player.gamesPlayed}", Modifier.weight(1f))
-                    Text("${player.wins}", Modifier.weight(1f), color = Color.Green)
-                    Text("${player.losses}", Modifier.weight(1f), color = Color.Red)
-                    Text("${player.rating}", Modifier.weight(1f),color = Color.Gray)
-                }
-                Divider(color = Color.Gray)
+                    .padding(vertical = 10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(player.name, Modifier.weight(2f))
+                Text("${player.gamesPlayed}", Modifier.weight(1f))
+                Text("${player.wins}", Modifier.weight(1f), color = Color.Green)
+                Text("${player.losses}", Modifier.weight(1f), color = Color.Red)
+                Text("${player.draws}", Modifier.weight(1f), color = Color.Gray)
+                Text("${player.rating}", Modifier.weight(1f), color = Color.Gray)
             }
+            Divider(color = Color.Gray)
         }
+    }
 }
 
 @Composable
 fun AddPlayerSection(
     players: List<Player>,
     onAddPlayer: (String) -> Unit
-){
+) {
     var showAdd by remember { mutableStateOf(false) }
     var newName by remember { mutableStateOf("") }
     var error by remember { mutableStateOf("") }
-    Row(modifier = Modifier.fillMaxWidth()
-        .clickable{showAdd = !showAdd}.padding(vertical = 6.dp),
+    Row(
+        modifier = Modifier.fillMaxWidth()
+            .clickable { showAdd = !showAdd }.padding(vertical = 6.dp),
         horizontalArrangement = Arrangement.SpaceBetween
-    ){
+    ) {
         Text("Add Player", fontSize = 16.sp)
         Icon(
             imageVector = if (showAdd) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-            contentDescription = if (showAdd) "Свернуть" else "Развернуть"
+            contentDescription = if (showAdd) "Close" else "Open"
         )
     }
-    if(showAdd){
+    if (showAdd) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(bottom = 8.dp)
-        ){
-            OutlinedTextField(value = newName,
+        ) {
+            OutlinedTextField(
+                value = newName,
                 onValueChange = { newName = it },
                 label = { Text("Name") },
                 singleLine = true,
@@ -142,13 +149,14 @@ fun AddPlayerSection(
             )
             Button(
                 onClick = {
-                val trimmedName = newName.trim()
-                when{
-                    trimmedName.isBlank() -> error = "Enter a name"
-                    players.any{trimmedName == it.name} -> error = "Name is already exists"
-                    else -> { onAddPlayer(trimmedName);newName = ""; error = ""}
+                    val trimmedName = newName.trim()
+                    when {
+                        trimmedName.isBlank() -> error = "Enter a name"
+                        players.any { trimmedName == it.name } -> error = "Name is already exists"
+                        else -> { onAddPlayer(trimmedName); newName = ""; error = "" }
+                    }
                 }
-            }) {Text("Add")}
+            ) { Text("Add") }
         }
         if (error.isNotEmpty()) Text(error, color = Color.Red, fontSize = 12.sp)
     }
@@ -198,6 +206,4 @@ fun GameSetupSection(
         )
     }
 }
-
-
 

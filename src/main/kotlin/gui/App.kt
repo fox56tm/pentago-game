@@ -1,3 +1,9 @@
-package main.ui
+package gui
 
-class App
+import androidx.compose.runtime.Composable
+
+
+@Composable
+fun App() {
+}
+
