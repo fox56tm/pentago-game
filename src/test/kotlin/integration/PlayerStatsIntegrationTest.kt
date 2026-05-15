@@ -36,9 +36,9 @@ class PlayerStatsIntegrationTest {
         playerRepo.save(player2)
 
         player1.wins++
-        player1.rating += 20
+        player1.rating += 100
         player2.losses++
-        player2.rating -= 20
+        player2.rating -= 100
 
         playerRepo.update(player1)
         playerRepo.update(player2)
@@ -47,9 +47,9 @@ class PlayerStatsIntegrationTest {
         val updated2 = playerRepo.findById(2)!!
 
         assertEquals(1, updated1.wins)
-        assertEquals(1020, updated1.rating)
+        assertEquals(1100, updated1.rating)
         assertEquals(1, updated2.losses)
-        assertEquals(980, updated2.rating)
+        assertEquals(900, updated2.rating)
     }
 
     @Test
@@ -80,11 +80,11 @@ class PlayerStatsIntegrationTest {
         playerRepo.save(player)
 
         player.wins++
-        player.rating += 20
+        player.rating += 100
         playerRepo.update(player)
 
         player.losses++
-        player.rating -= 20
+        player.rating -= 100
         playerRepo.update(player)
 
         player.draws++
