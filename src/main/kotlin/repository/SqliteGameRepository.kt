@@ -14,7 +14,7 @@ class SqliteGameRepository(private val dbHelper: DBHelper) : GameRepository {
             val winnerId = when {
                 game.status == "DRAW" -> null
                 game.status == "FINISHED" -> {
-                    //winner id
+                    // winner id
                     if (game.currTurnColor == "W") game.players[0].id else game.players[1].id
                 }
                 else -> null
@@ -37,6 +37,19 @@ class SqliteGameRepository(private val dbHelper: DBHelper) : GameRepository {
     }
 
     override fun findById(id: String): Game? {
+        dbHelper.getConnection().use { conn ->
+            val stmt = conn.prepareStatement("SELECT * FROM games WHERE id = ?")
+            stmt.setString(1, id)
+            val rs = stmt.executeQuery()
+            if (rs.next()) {
+                val p1 = model.Player(rs.getInt("player1_id"), "")
+                val p2 = model.Player(rs.getInt("player2_id"), "")
+
+                val game = model.Game(id, listOf(p1, p2))
+                game.status = rs.getString("status")
+                return game
+            }
+        }
         return null
     }
 

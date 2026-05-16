@@ -1,10 +1,9 @@
 package integration
 
 import model.Player
-import org.sqlite.core.DB
 import repository.DBHelper
-import repository.SqlitePlayerRepository
 import repository.SqliteGameRepository
+import repository.SqlitePlayerRepository
 import service.DefaultRules
 import service.GameService
 import java.io.File

@@ -48,7 +48,7 @@ fun App() {
             color1 = color1,
             playerRepo = playerRepo,
             onBack = {
-                //save game
+                // save game
                 val game = gameService.getGame(gameId)
                 if (game != null && game.status != "ACTIVE") {
                     gameHistoryRepo.save(game)
