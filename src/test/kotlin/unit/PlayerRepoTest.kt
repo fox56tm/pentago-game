@@ -10,7 +10,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
-class PlayerRepositoryTest {
+class PlayerRepoTest {
     private val testFile = "test_players.csv"
     private lateinit var repo: FilePlayerRepo
 
