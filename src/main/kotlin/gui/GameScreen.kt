@@ -237,7 +237,7 @@ fun Board(board: MutableList<MutableList<Int>>) {
                             .size(56.dp)
                             .padding(4.dp)
                             .border(2.dp, Color.Gray)
-                            .background(Color.Red),
+                            .background(if ((c > 2 && r < 3) || (r > 2 && c < 3)) Color.Red else Color.Yellow),
                         contentAlignment = Alignment.Center
                     ) {
                         if (cell != 0) {
