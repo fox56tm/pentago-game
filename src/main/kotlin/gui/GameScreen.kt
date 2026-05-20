@@ -134,7 +134,7 @@ fun GameInfoSection(
     movesCount: Int
 ) {
     Text("%02d:%02d".format(seconds / 60, (seconds % 60)), fontSize = 22.sp)
-    Text("${player1.name} = $color1 || ${player2.name} = $color2", fontSize = 12.sp, color = Color.Gray)
+    Text("${player1.name} = $color1 vs ${player2.name} = $color2", fontSize = 23.sp, color = Color.Gray)
     Text("Moves: $movesCount", fontSize = 12.sp)
 }
 
@@ -222,7 +222,7 @@ fun MoveInput(
         },
         modifier = Modifier.fillMaxWidth()
     ) { Text("Make move") }
-    if (message.isNotEmpty()) Text(message, fontSize = 13.sp)
+    if (message.isNotEmpty()) Text(message, fontSize = 25.sp)
 }
 
 @Composable
@@ -277,7 +277,7 @@ fun MoveHistory(moves: List<Move>) {
                 val num = moves.size - moves.reversed().indexOf(move)
                 Text(
                     "#$num ${move.color}: (${move.x},${move.y}) Q${move.quadrant}${move.rotation}",
-                    fontSize = 11.sp,
+                    fontSize = 18.sp,
                     modifier = Modifier.padding(vertical = 2.dp)
                 )
             }
