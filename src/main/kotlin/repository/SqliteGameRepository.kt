@@ -1,5 +1,6 @@
 package repository
 
+import main.repository.GameRecord
 import model.Game
 import java.time.LocalDateTime
 
@@ -75,12 +76,3 @@ class SqliteGameRepository(private val dbHelper: DBHelper) : GameRepository {
         return history
     }
 }
-
-data class GameRecord(
-    val gameId: String,
-    val player1Id: Int,
-    val player2Id: Int,
-    val winnerId: Int?,
-    val status: String,
-    val createdAt: String
-)
