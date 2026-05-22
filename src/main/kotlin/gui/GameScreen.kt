@@ -20,7 +20,6 @@ import androidx.compose.material.Button
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -79,7 +78,6 @@ fun GameScreen(
             player2 = player2,
             color1 = color1,
             color2 = color2,
-            seconds = seconds,
             isActive = isActive,
             onMove = { x, y, q, r ->
                 val player = if (game.currTurnColor == color1) player1 else player2
@@ -99,7 +97,6 @@ fun GameSidePanel(
     player2: Player,
     color1: String,
     color2: String,
-    seconds: Int,
     isActive: Boolean,
     onMove: (Int, Int, Int, String) -> Boolean,
     onBack: () -> Unit
@@ -108,7 +105,7 @@ fun GameSidePanel(
         modifier = Modifier.padding(24.dp).width(240.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        GameInfoSection(player1, player2, color1, color2, seconds, game.moves.size)
+        GameInfoSection(player1, player2, color1, color2, game.moves.size)
         Divider()
         if (isActive) {
             MoveInput(
@@ -130,10 +127,8 @@ fun GameInfoSection(
     player2: Player,
     color1: String,
     color2: String,
-    seconds: Int,
     movesCount: Int
 ) {
-    Text("%02d:%02d".format(seconds / 60, (seconds % 60)), fontSize = 22.sp)
     Text("${player1.name} = $color1 vs ${player2.name} = $color2", fontSize = 23.sp, color = Color.Gray)
     Text("Moves: $movesCount", fontSize = 12.sp)
 }
@@ -178,7 +173,7 @@ fun MoveInput(
     var x by remember { mutableStateOf("") }
     var y by remember { mutableStateOf("") }
     var quadrant by remember { mutableStateOf("") }
-    var rotation by remember { mutableStateOf("R") }
+    var rotation by remember { mutableStateOf("") }
     var message by remember { mutableStateOf("") }
     Text("Turn: $currentPlayerName ($currentColor)", fontSize = 15.sp)
     OutlinedTextField(
@@ -202,22 +197,25 @@ fun MoveInput(
         singleLine = true,
         modifier = Modifier.fillMaxWidth()
     )
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Text("Rotation: ")
-        RadioButton(rotation == "R", { rotation = "R" }); Text("R")
-        RadioButton(rotation == "L", { rotation = "L" }); Text("L")
-    }
+    OutlinedTextField(
+        rotation,
+        { rotation = it },
+        label = { Text("Rotation (L or R)") },
+        singleLine = true,
+        modifier = Modifier.fillMaxWidth()
+    )
     Button(
         onClick = {
             val xi = x.toIntOrNull()
             val yi = y.toIntOrNull()
             val qi = quadrant.toIntOrNull()
+            val ri = rotation.uppercase()
             if (xi == null || yi == null || qi == null) {
                 message = "Numbers only"
             } else {
-                val success = onMove(xi, yi, qi, rotation)
+                val success = onMove(xi, yi, qi, ri)
                 message = if (success) "Accepted!" else "Invalid move!"
-                if (success) { x = ""; y = ""; quadrant = "" }
+                if (success) { x = ""; y = ""; quadrant = ""; rotation = "" }
             }
         },
         modifier = Modifier.fillMaxWidth()
@@ -276,7 +274,7 @@ fun MoveHistory(moves: List<Move>) {
             items(moves.reversed()) { move ->
                 val num = moves.size - moves.reversed().indexOf(move)
                 Text(
-                    "#$num ${move.color}: (${move.x},${move.y}) Q${move.quadrant}${move.rotation}",
+                    "#$num ${move.color}: (${move.x},${move.y}) Q${move.quadrant}, Rot${move.rotation}",
                     fontSize = 18.sp,
                     modifier = Modifier.padding(vertical = 2.dp)
                 )
