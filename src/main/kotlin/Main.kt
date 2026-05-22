@@ -1,6 +1,6 @@
+package main
 
 fun main() {
-
-    println("Hello!")
-
+    val game = GameServiceRun()
+    game.run()
 }
