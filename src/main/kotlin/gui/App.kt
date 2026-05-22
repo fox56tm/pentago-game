@@ -6,16 +6,21 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import model.Player
-import repository.FilePlayerRepo
+import repository.DBHelper
 import repository.InMemoryGameRepository
+import repository.SqliteGameRepository
+import repository.SqlitePlayerRepository
 import service.DefaultRules
 import service.GameService
 
 @Composable
 fun App() {
-    val playerRepo = remember { FilePlayerRepo() }
-    val gameRepo = remember { InMemoryGameRepository() }
-    val gameService = remember { GameService(gameRepo, DefaultRules()) }
+    val dbHelper = remember { DBHelper() }
+    val playerRepo = remember { SqlitePlayerRepository(dbHelper) }
+    val gameHistoryRepo = remember { SqliteGameRepository(dbHelper) }
+    val activeGameRepo = remember { InMemoryGameRepository() }
+    val gameService = remember { GameService(activeGameRepo, DefaultRules()) }
+
     var currentScreen by remember { mutableStateOf("registry") }
     var gameId by remember { mutableStateOf("") }
     var player1 by remember { mutableStateOf<Player?>(null) }
@@ -42,7 +47,14 @@ fun App() {
             player2 = player2!!,
             color1 = color1,
             playerRepo = playerRepo,
-            onBack = { currentScreen = "registry" }
+            onBack = {
+                // save game
+                val game = gameService.getGame(gameId)
+                if (game != null && game.status != "ACTIVE") {
+                    gameHistoryRepo.save(game)
+                }
+                currentScreen = "registry"
+            }
         )
     }
 }

@@ -16,6 +16,7 @@ repositories {
 dependencies {
     implementation(kotlin("stdlib"))
     implementation(compose.desktop.currentOs)
+    implementation("org.xerial:sqlite-jdbc:3.44.1.0")
 
     testImplementation(kotlin("test"))
     testImplementation(platform("org.junit:junit-bom:5.10.2"))
