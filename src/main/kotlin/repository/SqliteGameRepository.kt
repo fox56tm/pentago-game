@@ -45,7 +45,6 @@ class SqliteGameRepository(private val dbHelper: DBHelper) : GameRepository {
             if (rs.next()) {
                 val p1 = model.Player(rs.getInt("player1_id"), "")
                 val p2 = model.Player(rs.getInt("player2_id"), "")
-
                 val game = model.Game(id, listOf(p1, p2))
                 game.status = rs.getString("status")
                 return game
