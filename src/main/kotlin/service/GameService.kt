@@ -5,7 +5,8 @@ import model.Move
 import model.Player
 import repository.GameRepository
 
-class GameService(
+class
+GameService(
     private val repository: GameRepository,
     private val ruleEngine: DefaultRules
 ) {
@@ -30,6 +31,7 @@ class GameService(
         val winner = ruleEngine.checkWinner(game)
         if (winner != null) {
             game.status = if (winner == "DRAW") "DRAW" else "FINISHED"
+            game.winnerColor = if (winner == "DRAW") null else winner
         }
         repository.save(game)
         return true
